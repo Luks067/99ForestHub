@@ -1,12 +1,11 @@
 --====================================
 -- 99 NOITES NA FLORESTA | HUB CORE
--- FIX DELTA MOBILE (gethui)
+-- DELTA MOBILE FIX (Activated + gethui)
 --====================================
 
 local Players = game:GetService("Players")
 local player = Players.LocalPlayer
 
--- CONFIG
 local cfg = {
     god = false,
     pull = false,
@@ -26,31 +25,38 @@ if player.Character then
 end
 player.CharacterAdded:Connect(loadChar)
 
--- GUI (EXECUTOR HUI)
+-- GUI
 local gui = Instance.new("ScreenGui")
 gui.Name = "ForestHub"
 gui.ResetOnSpawn = false
-gui.Parent = gethui() -- 🔥 ESSENCIAL NO DELTA
+pcall(function()
+    gui.Parent = gethui()
+end)
 
-local frame = Instance.new("Frame", gui)
-frame.Size = UDim2.new(0,200,0,180)
-frame.Position = UDim2.new(0.05,0,0.3,0)
+-- FRAME
+local frame = Instance.new("Frame")
+frame.Parent = gui
+frame.Size = UDim2.new(0, 220, 0, 190)
+frame.Position = UDim2.new(0.05, 0, 0.3, 0)
 frame.BackgroundColor3 = Color3.fromRGB(20,20,20)
 frame.Active = true
 frame.Draggable = true
 
--- BUTTON FUNCTION
+-- BUTTON FUNCTION (MOBILE SAFE)
 local function button(text, y, callback)
-    local b = Instance.new("TextButton", frame)
-    b.Size = UDim2.new(1,-20,0,35)
-    b.Position = UDim2.new(0,10,0,y)
+    local b = Instance.new("TextButton")
+    b.Parent = frame
+    b.Size = UDim2.new(1, -20, 0, 36)
+    b.Position = UDim2.new(0, 10, 0, y)
     b.Text = text
-    b.BackgroundColor3 = Color3.fromRGB(45,45,45)
     b.TextColor3 = Color3.new(1,1,1)
+    b.BackgroundColor3 = Color3.fromRGB(45,45,45)
     b.AutoButtonColor = true
     b.Active = true
     b.ZIndex = 10
-    b.MouseButton1Click:Connect(callback)
+
+    -- EVENTO CERTO PRA MOBILE
+    b.Activated:Connect(callback)
 end
 
 -- BUTTONS
@@ -72,7 +78,7 @@ end)
 
 -- GOD MODE
 task.spawn(function()
-    while task.wait(0.4) do
+    while task.wait(0.3) do
         if cfg.god and hum then
             hum.MaxHealth = math.huge
             hum.Health = hum.MaxHealth
@@ -80,7 +86,7 @@ task.spawn(function()
     end
 end)
 
--- PUXAR ITENS / ARMAS
+-- PUXAR ITENS
 task.spawn(function()
     while task.wait(0.6) do
         if cfg.pull and hrp then
